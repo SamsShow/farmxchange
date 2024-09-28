@@ -44,10 +44,10 @@ const LandingPage = () => {
         </section>
 
         <section className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-16">
-          <img src="/api/placeholder/150/150" alt="Organic Farming" className="rounded-full mx-auto" />
-          <img src="/api/placeholder/150/150" alt="Fresh Produce" className="rounded-full mx-auto" />
-          <img src="/api/placeholder/150/150" alt="Direct Sales" className="rounded-full mx-auto" />
-          <img src="/api/placeholder/150/150" alt="Fair Prices" className="rounded-full mx-auto" />
+          <img src="https://images.unsplash.com/photo-1657288649124-b80bdee3c17e?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Organic Farming" className="rounded-md mx-auto" />
+          <img src="https://plus.unsplash.com/premium_photo-1666822818340-2f8e26f0e50a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Fresh Produce" className="rounded-md mx-auto" />
+          <img src="https://plus.unsplash.com/premium_photo-1686285539247-818ad6be256c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Direct Sales" className="rounded-md mx-auto" />
+          <img src="https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Fair Prices" className="rounded-md mx-auto" />
         </section>
 
         <section className="mb-16">
