@@ -23,8 +23,8 @@ const HowItWorksStep = ({ number, title, description }) => (
 
 const LandingPage = () => {
   return (
-    <div className="min-h-screen bg-white text-gray-800">
-      <header className="bg-green-50 p-4">
+    <div className="min-h-screen bg-white text-gray-800 py-10">
+      {/* <header className="bg-green-50 p-4">
         <nav className="flex justify-between items-center max-w-6xl mx-auto">
           <div className="text-2xl font-bold text-green-600">FarmXchange</div>
           <div className="space-x-4">
@@ -34,9 +34,9 @@ const LandingPage = () => {
             <a href="#" className="text-green-600">Contact</a>
           </div>
         </nav>
-      </header>
+      </header> */}
 
-      <main className="max-w-6xl mx-auto mt-12 px-4">
+      <main className="max-w-6xl mx-auto mt-12 px-16">
         <section className="text-center mb-16">
           <h1 className="text-4xl font-bold mb-4">Digital Marketplace for Farmers</h1>
           <p className="text-xl mb-8">Connect directly with consumers and businesses. Get fair prices for your produce.</p>
