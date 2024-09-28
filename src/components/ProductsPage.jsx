@@ -165,6 +165,11 @@ function ProductsPage({ contract, signer }) {
                 className="bg-white overflow-hidden shadow-lg rounded-lg hover:shadow-xl transition-shadow duration-300"
               >
                 <div className="px-4 py-5 sm:p-6">
+                  <img
+                    src={`https://ipfs.io/ipfs/${product.ipfsHash}`}
+                    alt={product.name}
+                    className="w-full h-48 object-cover rounded-md mb-4"
+                  />
                   <h3 className="text-lg font-semibold text-green-800 mb-2">{product.name}</h3>
                   <div className="text-sm text-gray-600">
                     <p>Price: {product.price} ETH</p>
