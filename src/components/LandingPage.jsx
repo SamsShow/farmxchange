@@ -10,14 +10,16 @@ const Feature = ({ icon, title, description }) => (
   </div>
 );
 
-const HowItWorksStep = ({ number, title, description }) => (
-  <div className="flex items-start mb-4">
+const HowItWorksStep = ({ number, title, description, hindiTitle, hindiDescription }) => (
+  <div className="flex items-start mb-8">
     <div className="bg-green-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-4 flex-shrink-0">
       {number}
     </div>
     <div>
       <h3 className="font-semibold">{title}</h3>
-      <p className="text-sm">{description}</p>
+      <p className="text-sm mb-2">{description}</p>
+      <h3 className="font-semibold text-green-700">{hindiTitle}</h3>
+      <p className="text-sm">{hindiDescription}</p>
     </div>
   </div>
 );
@@ -82,30 +84,38 @@ const LandingPage = () => {
         </section>
 
         <section className="mb-16">
-          <h2 className="text-2xl font-bold mb-8 text-center">How It Works</h2>
-          <div className="max-w-2xl mx-auto">
-            <HowItWorksStep 
-              number="1"
-              title="Register as a Farmer"
-              description="Create your account on FarmXchange to start selling your produce."
-            />
-            <HowItWorksStep 
-              number="2"
-              title="List Your Products"
-              description="Add your products with details and images. All information is stored securely on the blockchain."
-            />
-            <HowItWorksStep 
-              number="3"
-              title="Connect with Buyers"
-              description="Buyers can browse your products and make purchases directly using cryptocurrency."
-            />
-            <HowItWorksStep 
-              number="4"
-              title="Secure Transactions"
-              description="Smart contracts manage the payment process, ensuring fair and transparent deals."
-            />
-          </div>
-        </section>
+        <h2 className="text-2xl font-bold mb-8 text-center">How It Works / कैसे काम करता है</h2>
+        <div className="max-w-3xl mx-auto">
+          <HowItWorksStep 
+            number="1"
+            title="Register as a Farmer"
+            description="Create your account on FarmXchange to start selling your produce."
+            hindiTitle="किसान के रूप में पंजीकरण करें"
+            hindiDescription="अपनी उपज बेचना शुरू करने के लिए FarmXchange पर अपना खाता बनाएं।"
+          />
+          <HowItWorksStep 
+            number="2"
+            title="List Your Products"
+            description="Add your products with details and images. All information is stored securely on the blockchain."
+            hindiTitle="अपने उत्पादों को सूचीबद्ध करें"
+            hindiDescription="विवरण और छवियों के साथ अपने उत्पादों को जोड़ें। सभी जानकारी ब्लॉकचेन पर सुरक्षित रूप से संग्रहीत की जाती है।"
+          />
+          <HowItWorksStep 
+            number="3"
+            title="Connect with Buyers"
+            description="Buyers can browse your products and make purchases directly using cryptocurrency."
+            hindiTitle="खरीदारों से जुड़ें"
+            hindiDescription="खरीदार आपके उत्पादों को ब्राउज़ कर सकते हैं और क्रिप्टोकरेंसी का उपयोग करके सीधे खरीदारी कर सकते हैं।"
+          />
+          <HowItWorksStep 
+            number="4"
+            title="Secure Transactions"
+            description="Smart contracts manage the payment process, ensuring fair and transparent deals."
+            hindiTitle="सुरक्षित लेनदेन"
+            hindiDescription="स्मार्ट कॉन्ट्रैक्ट्स भुगतान प्रक्रिया का प्रबंधन करते हैं, जो निष्पक्ष और पारदर्शी सौदों को सुनिश्चित करता है।"
+          />
+        </div>
+      </section>
 
         <section className="text-center mb-16">
           <h2 className="text-2xl font-bold mb-4">Ready to revolutionize your farming business?</h2>
