@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { ethers } from 'ethers';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'react-toastify';
+import { parseEther, formatEther, isEthersAvailable } from '../utils/etherUtils';
+import { ethers } from 'ethers';
 
 function ProductsPage({ contract, signer }) {
   const [products, setProducts] = useState([]);
@@ -8,6 +10,10 @@ function ProductsPage({ contract, signer }) {
   const [updateProduct, setUpdateProduct] = useState({ id: '', price: '', quantity: '', ipfsHash: '' });
 
   useEffect(() => {
+    if (!isEthersAvailable()) {
+      toast.error('Ethers library is not properly initialized');
+      return;
+    }
     loadProducts();
   }, [contract]);
 
@@ -21,7 +27,7 @@ function ProductsPage({ contract, signer }) {
         loadedProducts.push({
           id: i,
           name: product[0],
-          price: ethers.utils.formatEther(product[1]),
+          price: formatEther(product[1]),
           quantity: product[2].toString(),
           ipfsHash: product[3],
           farmer: product[4]
@@ -30,63 +36,91 @@ function ProductsPage({ contract, signer }) {
       setProducts(loadedProducts);
     } catch (error) {
       console.error('Error loading products:', error);
+      toast.error('Failed to load products.');
     }
   };
 
   const addProduct = async () => {
     if (!newProduct.name || !newProduct.price || !newProduct.quantity || !newProduct.ipfsHash) {
-      alert('All fields are required to add a product.');
+      toast.error('All fields are required to add a product.');
+      return;
+    }
+
+    if (isNaN(newProduct.price) || parseFloat(newProduct.price) <= 0) {
+      toast.error('Invalid price entered.');
       return;
     }
 
     try {
+      console.log("Price input:", newProduct.price);
+      toast.info('Adding product...');
+      
+      const priceInWei = parseEther(newProduct.price);
       const tx = await contract.addProduct(
         newProduct.name,
-        ethers.utils.parseEther(newProduct.price),
+        priceInWei,
         newProduct.quantity,
         newProduct.ipfsHash
       );
       await tx.wait();
-      alert('Product added successfully!');
+      toast.success('Product added successfully!');
       loadProducts();
     } catch (error) {
       console.error('Error adding product:', error);
-      alert('Failed to add product.');
+      toast.error(`Failed to add product: ${error.message}`);
     }
   };
 
   const purchaseProduct = async (id, price) => {
     try {
-      const tx = await contract.purchaseProduct(id, 1, { value: ethers.utils.parseEther(price) });
+      const tx = await contract.purchaseProduct(id, 1, { value: parseEther(price) });
       await tx.wait();
-      alert('Product purchased successfully!');
+      toast.success('Product purchased successfully!');
       loadProducts();
     } catch (error) {
       console.error('Error purchasing product:', error);
-      alert('Failed to purchase product.');
+      toast.error('Failed to purchase product.');
     }
   };
 
   const updateProductDetails = async () => {
     if (!updateProduct.id || !updateProduct.price || !updateProduct.quantity || !updateProduct.ipfsHash) {
-      alert('All fields are required to update a product.');
+      toast.error('All fields are required to update a product.');
       return;
     }
 
     try {
       const tx = await contract.updateProduct(
         updateProduct.id,
-        ethers.utils.parseEther(updateProduct.price),
+        parseEther(updateProduct.price),
         updateProduct.quantity,
         updateProduct.ipfsHash
       );
       await tx.wait();
-      alert('Product updated successfully!');
+      toast.success('Product updated successfully!');
       loadProducts();
     } catch (error) {
       console.error('Error updating product:', error);
-      alert('Failed to update product.');
+      toast.error('Failed to update product.');
     }
+  };
+
+  const parseEther = (value) => {
+    if (ethers.utils && ethers.utils.parseEther) {
+      return ethers.utils.parseEther(value);
+    } else if (ethers.parseEther) {
+      return ethers.parseEther(value);
+    }
+    throw new Error('Ethers library not properly initialized');
+  };
+  
+  const formatEther = (value) => {
+    if (ethers.utils && ethers.utils.formatEther) {
+      return ethers.utils.formatEther(value);
+    } else if (ethers.formatEther) {
+      return ethers.formatEther(value);
+    }
+    throw new Error('Ethers library not properly initialized');
   };
 
   return (

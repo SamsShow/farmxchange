@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify'; // Import toast
 
 function AdminPage({ contract, signer }) {
   const [farmerName, setFarmerName] = useState('');
@@ -7,26 +8,37 @@ function AdminPage({ contract, signer }) {
 
   // Updated registerFarmer to include both farmerName and farmerAddress
   const registerFarmer = async () => {
+    if (!farmerName || !farmerAddress) {
+      toast.error('Both Farmer Name and Address are required.'); // Notify user for missing fields
+      return;
+    }
+
     try {
       const tx = await contract.registerFarmer(farmerAddress, farmerName); // Passing both farmerAddress and farmerName
       await tx.wait();
-      alert('Farmer registered successfully!');
+      toast.success('Farmer registered successfully!'); // Use toast here
     } catch (error) {
       console.error('Error registering farmer:', error);
-      alert('Failed to register farmer.');
+      toast.error('Failed to register farmer.'); // Use toast here
     }
   };
 
   const getFarmerDetails = async () => {
+    if (!farmerAddress) {
+      toast.error('Farmer Address is required to fetch details.'); // Notify user for missing fields
+      return;
+    }
+
     try {
       const details = await contract.getFarmerDetails(farmerAddress);
       setFarmerDetails({
         name: details[0],
         isRegistered: details[1]
       });
+      toast.success('Farmer details fetched successfully!'); // Optional success message
     } catch (error) {
       console.error('Error getting farmer details:', error);
-      alert('Failed to get farmer details.');
+      toast.error('Failed to get farmer details.'); // Use toast here
     }
   };
 
@@ -71,7 +83,7 @@ function AdminPage({ contract, signer }) {
               value={farmerAddress} 
               onChange={(e) => setFarmerAddress(e.target.value)} 
               placeholder="Farmer Address" 
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none bg-gree focus:ring-green-500 focus:border-green-500 sm:text-sm"
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
             />
             <button 
               onClick={getFarmerDetails}

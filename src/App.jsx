@@ -6,6 +6,8 @@ import AdminPage from './components/AdminPage';
 import ProductsPage from './components/ProductsPage';
 import DashboardPage from './components/DasboardPage';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ToastContainer } from 'react-toastify'; // Import ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Import CSS for Toastify
 
 import { CONTRACT_ADDRESS } from './config/contractAddress';
 import CONTRACT_ABI from './config/abi.json';
@@ -116,6 +118,8 @@ function App() {
         <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           <AnimatedRoutes contract={contract} signer={signer} isConnected={isConnected} />
         </main>
+
+        <ToastContainer /> {/* Add ToastContainer here */}
       </div>
     </Router>
   );

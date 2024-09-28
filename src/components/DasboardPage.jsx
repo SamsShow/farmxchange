@@ -1,26 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 
 function DashboardPage({ contract }) {
   const [farmerCount, setFarmerCount] = useState(0);
   const [productCount, setProductCount] = useState(0);
 
-  useEffect(() => {
-    const loadCounts = async () => {
-      if (contract) {
-        try {
-          const farmers = await contract.getFarmerCount();
-          const products = await contract.getProductCount();
-          setFarmerCount(farmers.toString());
-          setProductCount(products.toString());
-        } catch (error) {
-          console.error('Error loading counts:', error);
-        }
+  const fetchCounts = async () => {
+    if (contract) {
+      try {
+        const farmers = await contract.getFarmerCount();
+        const products = await contract.getProductCount();
+        setFarmerCount(farmers.toString());
+        setProductCount(products.toString());
+      } catch (error) {
+        console.error('Error loading counts:', error);
       }
-    };
-
-    loadCounts();
-  }, [contract]);
+    }
+  };
 
   return (
     <div className="bg-white shadow-lg rounded-lg overflow-hidden">
@@ -28,6 +24,12 @@ function DashboardPage({ contract }) {
         <h1 className="text-2xl font-bold text-white">Dashboard</h1>
       </div>
       <div className="p-6">
+        <button
+          onClick={fetchCounts}
+          className="bg-green-600 text-white px-4 py-2 rounded mb-4"
+        >
+          Fetch Data
+        </button>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <motion.div 
             className="bg-green-100 rounded-lg p-6 shadow"
