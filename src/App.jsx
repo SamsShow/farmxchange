@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link, Routes, useLocation } from 'react-router-dom';
 import { ethers } from 'ethers';
+import Home from './components/LandingPage';
 import AdminPage from './components/AdminPage';
 import ProductsPage from './components/ProductsPage';
 import DashboardPage from './components/DasboardPage';
@@ -80,6 +81,7 @@ function App() {
                   <span className="text-2xl font-bold text-white">FarmXchange</span>
                 </div>
                 <div className="ml-6 flex space-x-8">
+                  <NavLink to="/">Home</NavLink>
                   <NavLink to="/admin">Admin</NavLink>
                   <NavLink to="/products">Products</NavLink>
                   <NavLink to="/dashboard">Dashboard</NavLink>
