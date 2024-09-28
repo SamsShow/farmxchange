@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 
 function AdminPage({ contract, signer }) {
   const [farmerName, setFarmerName] = useState('');
-  const [farmerAddress, setFarmerAddress] = useState('');
+  const [farmerAddress, setFarmerAddress] = useState(''); // Farmer Address input
   const [farmerDetails, setFarmerDetails] = useState(null);
 
+  // Updated registerFarmer to include both farmerName and farmerAddress
   const registerFarmer = async () => {
     try {
-      const tx = await contract.registerFarmer(farmerName);
+      const tx = await contract.registerFarmer(farmerAddress, farmerName); // Passing both farmerAddress and farmerName
       await tx.wait();
       alert('Farmer registered successfully!');
     } catch (error) {
@@ -31,8 +32,8 @@ function AdminPage({ contract, signer }) {
 
   return (
     <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-      <div className="px-4 py-5 sm:px-6">
-        <h1 className="text-2xl font-bold text-gray-900">Admin Page</h1>
+      <div className="px-4 py-5 sm:px-6 bg-green-600">
+        <h1 className="text-2xl font-bold text-white">Admin Page</h1>
       </div>
       <div className="border-t border-gray-200">
         <div className="px-4 py-5 sm:p-6">
@@ -43,11 +44,18 @@ function AdminPage({ contract, signer }) {
               value={farmerName} 
               onChange={(e) => setFarmerName(e.target.value)} 
               placeholder="Farmer Name" 
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+            />
+            <input 
+              type="text" 
+              value={farmerAddress} 
+              onChange={(e) => setFarmerAddress(e.target.value)} 
+              placeholder="Farmer Address" 
+              className="mt-3 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
             />
             <button 
               onClick={registerFarmer}
-              className="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             >
               Register Farmer
             </button>
@@ -63,11 +71,11 @@ function AdminPage({ contract, signer }) {
               value={farmerAddress} 
               onChange={(e) => setFarmerAddress(e.target.value)} 
               placeholder="Farmer Address" 
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none bg-gree focus:ring-green-500 focus:border-green-500 sm:text-sm"
             />
             <button 
               onClick={getFarmerDetails}
-              className="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             >
               Get Details
             </button>

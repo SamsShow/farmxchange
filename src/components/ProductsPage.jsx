@@ -13,23 +13,32 @@ function ProductsPage({ contract, signer }) {
 
   const loadProducts = async () => {
     if (!contract) return;
-    const productCount = await contract.getProductCount();
-    const loadedProducts = [];
-    for (let i = 1; i <= productCount; i++) {
-      const product = await contract.getProduct(i);
-      loadedProducts.push({
-        id: i,
-        name: product[0],
-        price: ethers.utils.formatEther(product[1]),
-        quantity: product[2].toString(),
-        ipfsHash: product[3],
-        farmer: product[4]
-      });
+    try {
+      const productCount = await contract.getProductCount();
+      const loadedProducts = [];
+      for (let i = 1; i <= productCount; i++) {
+        const product = await contract.getProduct(i);
+        loadedProducts.push({
+          id: i,
+          name: product[0],
+          price: ethers.utils.formatEther(product[1]),
+          quantity: product[2].toString(),
+          ipfsHash: product[3],
+          farmer: product[4]
+        });
+      }
+      setProducts(loadedProducts);
+    } catch (error) {
+      console.error('Error loading products:', error);
     }
-    setProducts(loadedProducts);
   };
 
   const addProduct = async () => {
+    if (!newProduct.name || !newProduct.price || !newProduct.quantity || !newProduct.ipfsHash) {
+      alert('All fields are required to add a product.');
+      return;
+    }
+
     try {
       const tx = await contract.addProduct(
         newProduct.name,
@@ -59,6 +68,11 @@ function ProductsPage({ contract, signer }) {
   };
 
   const updateProductDetails = async () => {
+    if (!updateProduct.id || !updateProduct.price || !updateProduct.quantity || !updateProduct.ipfsHash) {
+      alert('All fields are required to update a product.');
+      return;
+    }
+
     try {
       const tx = await contract.updateProduct(
         updateProduct.id,
@@ -80,29 +94,29 @@ function ProductsPage({ contract, signer }) {
       <div className="px-4 py-5 sm:px-6 bg-green-600">
         <h1 className="text-2xl font-bold text-white">Products</h1>
       </div>
-      
+
       <div className="p-6 border-b border-gray-200">
         <h2 className="text-xl font-semibold text-green-800 mb-4">Add New Product</h2>
         <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-          <Input placeholder="Name" onChange={(e) => setNewProduct({...newProduct, name: e.target.value})} />
-          <Input placeholder="Price (ETH)" onChange={(e) => setNewProduct({...newProduct, price: e.target.value})} />
-          <Input placeholder="Quantity" type="number" onChange={(e) => setNewProduct({...newProduct, quantity: e.target.value})} />
-          <Input placeholder="IPFS Hash" onChange={(e) => setNewProduct({...newProduct, ipfsHash: e.target.value})} />
+          <Input placeholder="Name" onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })} />
+          <Input placeholder="Price (ETH)" onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })} />
+          <Input placeholder="Quantity" type="number" onChange={(e) => setNewProduct({ ...newProduct, quantity: e.target.value })} />
+          <Input placeholder="IPFS Hash" onChange={(e) => setNewProduct({ ...newProduct, ipfsHash: e.target.value })} />
         </div>
         <Button onClick={addProduct}>Add Product</Button>
       </div>
-      
+
       <div className="p-6 border-b border-gray-200">
         <h2 className="text-xl font-semibold text-green-800 mb-4">Update Product</h2>
         <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-          <Input placeholder="Product ID" type="number" onChange={(e) => setUpdateProduct({...updateProduct, id: e.target.value})} />
-          <Input placeholder="New Price (ETH)" onChange={(e) => setUpdateProduct({...updateProduct, price: e.target.value})} />
-          <Input placeholder="New Quantity" type="number" onChange={(e) => setUpdateProduct({...updateProduct, quantity: e.target.value})} />
-          <Input placeholder="New IPFS Hash" onChange={(e) => setUpdateProduct({...updateProduct, ipfsHash: e.target.value})} />
+          <Input placeholder="Product ID" type="number" onChange={(e) => setUpdateProduct({ ...updateProduct, id: e.target.value })} />
+          <Input placeholder="New Price (ETH)" onChange={(e) => setUpdateProduct({ ...updateProduct, price: e.target.value })} />
+          <Input placeholder="New Quantity" type="number" onChange={(e) => setUpdateProduct({ ...updateProduct, quantity: e.target.value })} />
+          <Input placeholder="New IPFS Hash" onChange={(e) => setUpdateProduct({ ...updateProduct, ipfsHash: e.target.value })} />
         </div>
         <Button onClick={updateProductDetails}>Update Product</Button>
       </div>
-      
+
       <div className="p-6">
         <h2 className="text-xl font-semibold text-green-800 mb-4">Product List</h2>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
