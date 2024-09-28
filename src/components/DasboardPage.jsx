@@ -26,7 +26,7 @@ function DashboardPage({ contract }) {
       <div className="p-6">
         <button
           onClick={fetchCounts}
-          className="bg-green-600 text-white px-4 py-2 rounded mb-4"
+          className="bg-green-600 text-white px-4 py-2 rounded mb-4 transition-all hover:scale-90"
         >
           Fetch Data
         </button>
