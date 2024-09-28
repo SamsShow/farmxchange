@@ -3,11 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-toastify';
 import { parseEther, formatEther, isEthersAvailable } from '../utils/etherUtils';
 import { ethers } from 'ethers';
+import axios from 'axios';
+import config from '../config';
 
 function ProductsPage({ contract, signer }) {
   const [products, setProducts] = useState([]);
-  const [newProduct, setNewProduct] = useState({ name: '', price: '', quantity: '', ipfsHash: '' });
-  const [updateProduct, setUpdateProduct] = useState({ id: '', price: '', quantity: '', ipfsHash: '' });
+  const [newProduct, setNewProduct] = useState({ name: '', price: '', quantity: '', image: null });
+  const [updateProduct, setUpdateProduct] = useState({ id: '', price: '', quantity: '', image: null });
 
   useEffect(() => {
     if (!isEthersAvailable()) {
@@ -16,6 +18,7 @@ function ProductsPage({ contract, signer }) {
     }
     loadProducts();
   }, [contract]);
+
 
   const loadProducts = async () => {
     if (!contract) return;
@@ -40,8 +43,37 @@ function ProductsPage({ contract, signer }) {
     }
   };
 
+  const uploadToPinata = async (file) => {
+    if (!config.PINATA_API_KEY || !config.PINATA_SECRET_API_KEY) {
+      throw new Error('Pinata API keys are not set in the environment variables.');
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const pinataMetadata = JSON.stringify({
+      name: file.name,
+    });
+    formData.append('pinataMetadata', pinataMetadata);
+
+    try {
+      const res = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
+        maxBodyLength: "Infinity",
+        headers: {
+          'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+          'pinata_api_key': config.PINATA_API_KEY,
+          'pinata_secret_api_key': config.PINATA_SECRET_API_KEY
+        }
+      });
+      return res.data.IpfsHash;
+    } catch (error) {
+      console.error('Error uploading to Pinata:', error);
+      throw error;
+    }
+  };
+
   const addProduct = async () => {
-    if (!newProduct.name || !newProduct.price || !newProduct.quantity || !newProduct.ipfsHash) {
+    if (!newProduct.name || !newProduct.price || !newProduct.quantity || !newProduct.image) {
       toast.error('All fields are required to add a product.');
       return;
     }
@@ -52,15 +84,16 @@ function ProductsPage({ contract, signer }) {
     }
 
     try {
-      console.log("Price input:", newProduct.price);
-      toast.info('Adding product...');
+      toast.info('Uploading image to IPFS...');
+      const ipfsHash = await uploadToPinata(newProduct.image);
       
+      toast.info('Adding product...');
       const priceInWei = parseEther(newProduct.price);
       const tx = await contract.addProduct(
         newProduct.name,
         priceInWei,
         newProduct.quantity,
-        newProduct.ipfsHash
+        ipfsHash
       );
       await tx.wait();
       toast.success('Product added successfully!');
@@ -84,17 +117,23 @@ function ProductsPage({ contract, signer }) {
   };
 
   const updateProductDetails = async () => {
-    if (!updateProduct.id || !updateProduct.price || !updateProduct.quantity || !updateProduct.ipfsHash) {
+    if (!updateProduct.id || !updateProduct.price || !updateProduct.quantity) {
       toast.error('All fields are required to update a product.');
       return;
     }
 
     try {
+      let ipfsHash = updateProduct.ipfsHash;
+      if (updateProduct.image) {
+        toast.info('Uploading new image to IPFS...');
+        ipfsHash = await uploadToPinata(updateProduct.image);
+      }
+
       const tx = await contract.updateProduct(
         updateProduct.id,
         parseEther(updateProduct.price),
         updateProduct.quantity,
-        updateProduct.ipfsHash
+        ipfsHash
       );
       await tx.wait();
       toast.success('Product updated successfully!');
@@ -135,7 +174,7 @@ function ProductsPage({ contract, signer }) {
           <Input placeholder="Name" onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })} />
           <Input placeholder="Price (ETH)" onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })} />
           <Input placeholder="Quantity" type="number" onChange={(e) => setNewProduct({ ...newProduct, quantity: e.target.value })} />
-          <Input placeholder="IPFS Hash" onChange={(e) => setNewProduct({ ...newProduct, ipfsHash: e.target.value })} />
+          <Input type="file" onChange={(e) => setNewProduct({ ...newProduct, image: e.target.files[0] })} />
         </div>
         <Button onClick={addProduct}>Add Product</Button>
       </div>
@@ -146,7 +185,7 @@ function ProductsPage({ contract, signer }) {
           <Input placeholder="Product ID" type="number" onChange={(e) => setUpdateProduct({ ...updateProduct, id: e.target.value })} />
           <Input placeholder="New Price (ETH)" onChange={(e) => setUpdateProduct({ ...updateProduct, price: e.target.value })} />
           <Input placeholder="New Quantity" type="number" onChange={(e) => setUpdateProduct({ ...updateProduct, quantity: e.target.value })} />
-          <Input placeholder="New IPFS Hash" onChange={(e) => setUpdateProduct({ ...updateProduct, ipfsHash: e.target.value })} />
+          <Input type="file" onChange={(e) => setUpdateProduct({ ...updateProduct, image: e.target.files[0] })} />
         </div>
         <Button onClick={updateProductDetails}>Update Product</Button>
       </div>
@@ -166,7 +205,7 @@ function ProductsPage({ contract, signer }) {
               >
                 <div className="px-4 py-5 sm:p-6">
                   <img
-                    src={`https://ipfs.io/ipfs/${product.ipfsHash}`}
+                    src={`https://gateway.pinata.cloud/ipfs/${product.ipfsHash}`}
                     alt={product.name}
                     className="w-full h-48 object-cover rounded-md mb-4"
                   />
@@ -174,7 +213,6 @@ function ProductsPage({ contract, signer }) {
                   <div className="text-sm text-gray-600">
                     <p>Price: {product.price} ETH</p>
                     <p>Quantity: {product.quantity}</p>
-                    <p className="truncate">IPFS Hash: {product.ipfsHash}</p>
                   </div>
                   <div className="mt-4">
                     <Button onClick={() => purchaseProduct(product.id, product.price)} small>Purchase</Button>
