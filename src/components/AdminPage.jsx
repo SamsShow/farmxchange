@@ -1,31 +1,31 @@
 import React, { useState } from 'react';
-import { toast } from 'react-toastify'; // Import toast
+import { toast } from 'react-toastify'; 
 
 function AdminPage({ contract, signer }) {
   const [farmerName, setFarmerName] = useState('');
-  const [farmerAddress, setFarmerAddress] = useState(''); // Farmer Address input
+  const [farmerAddress, setFarmerAddress] = useState(''); 
   const [farmerDetails, setFarmerDetails] = useState(null);
 
-  // Updated registerFarmer to include both farmerName and farmerAddress
+  
   const registerFarmer = async () => {
     if (!farmerName || !farmerAddress) {
-      toast.error('Both Farmer Name and Address are required.'); // Notify user for missing fields
+      toast.error('Both Farmer Name and Address are required.');
       return;
     }
 
     try {
-      const tx = await contract.registerFarmer(farmerAddress, farmerName); // Passing both farmerAddress and farmerName
+      const tx = await contract.registerFarmer(farmerAddress, farmerName);
       await tx.wait();
-      toast.success('Farmer registered successfully!'); // Use toast here
+      toast.success('Farmer registered successfully!'); 
     } catch (error) {
       console.error('Error registering farmer:', error);
-      toast.error('Failed to register farmer.'); // Use toast here
+      toast.error('Failed to register farmer.');
     }
   };
 
   const getFarmerDetails = async () => {
     if (!farmerAddress) {
-      toast.error('Farmer Address is required to fetch details.'); // Notify user for missing fields
+      toast.error('Farmer Address is required to fetch details.');
       return;
     }
 
@@ -35,10 +35,10 @@ function AdminPage({ contract, signer }) {
         name: details[0],
         isRegistered: details[1]
       });
-      toast.success('Farmer details fetched successfully!'); // Optional success message
+      toast.success('Farmer details fetched successfully!'); 
     } catch (error) {
       console.error('Error getting farmer details:', error);
-      toast.error('Failed to get farmer details.'); // Use toast here
+      toast.error('Failed to get farmer details.'); 
     }
   };
 
