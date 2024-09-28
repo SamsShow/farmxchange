@@ -1,5 +1,6 @@
 import React from 'react';
 import { Leaf } from 'lucide-react';
+import logo from '../assets/farmXchange.png'
 
 const Feature = ({ icon, title, description }) => (
   <div className="flex flex-col items-center text-center p-4">
@@ -35,6 +36,15 @@ const LandingPage = () => {
           </div>
         </nav>
       </header> */}
+
+      <header className="bg-green-50 p-4 flex">
+        <nav className="flex justify-between items-center max-w-6xl mx-auto">
+          <div className="flex items-center">
+            <img src={logo} alt="FarmXchange Logo" className="h-10 mr-2" />
+            <div className="text-2xl font-bold text-green-600">FarmXchange</div>
+          </div>
+        </nav>
+      </header>
 
       <main className="max-w-6xl mx-auto mt-12 px-16">
         <section className="text-center mb-16">
