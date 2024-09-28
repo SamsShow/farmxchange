@@ -138,6 +138,19 @@ function AnimatedRoutes({ contract, signer, isConnected }) {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route 
+          path="/" 
+          element={
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Home />
+            </motion.div>
+          } 
+        />
+        <Route 
           path="/admin" 
           element={
             <motion.div
